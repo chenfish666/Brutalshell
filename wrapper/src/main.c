@@ -14,6 +14,7 @@
 #include <fcntl.h>
 
 #include <alloca.h>
+#include <signal.h>
 
 #include "wrapper.h"
 
@@ -42,6 +43,7 @@ signed main( int argc, char **argv ){
 	register char *restrict child_pty_name;
 
 	register int daemon_fd;
+	register char *restrict session_id = NULL;
 
 	register pid_t pid;
 
@@ -131,6 +133,22 @@ signed main( int argc, char **argv ){
 
 	daemon_fd = connect_daemon( cfg );
 
+	if ( daemon_fd < 0 ){
+		logerr( "Failed to connect the daemon\n", 29 );
+		kill( pid, SIGTERM );
+		waitpid( pid, NULL, 0 );
+		goto ONERR;
+	}
+
+	session_id = get_session( daemon_fd );
+
+	if ( !session_id ){
+		logerr( "Failed to get session id\n", 21 );
+		kill( pid, SIGTERM );
+		waitpid( pid, NULL, 0 );
+		goto ONERR;
+	}
+
 	fds = alloca( sizeof( *fds ) * 3 );
 
 	( *( fds + 0 ) ).fd = STDIN_FILENO;
@@ -145,7 +163,7 @@ signed main( int argc, char **argv ){
 	buf = malloc( BUFLEN );
 
 	while ( 69 ){
-		err = poll( fds, 2, -1 );
+		err = poll( fds, 3, -1 );
 		if ( err < 0 ){
 			logerr( "Failed to poll\n", 16 );
 			break;
@@ -155,7 +173,6 @@ signed main( int argc, char **argv ){
 			rlen = read( ( *( fds + 0 ) ).fd, buf, BUFLEN );
 			if ( rlen <= 0 ) break;
 			write( ( *( fds + 1 ) ).fd, buf, rlen );
-			continue;
 		}
 
 		if ( ( *( fds + 1 ) ).revents & POLLHUP ) {
@@ -166,19 +183,23 @@ signed main( int argc, char **argv ){
 			rlen = read( ( *( fds + 1 ) ).fd, buf, BUFLEN );
 			if ( rlen <= 0 ) break;
 			write( ( *( fds + 0 ) ).fd, buf, rlen ); /* write back for terminal user */
-			send_daemon( cfg.daemon_method, ( *( fds + 2 ) ).fd, buf, rlen );
-			continue;
+			send_daemon( cfg.daemon_method, session_id, ( *( fds + 2 ) ).fd, buf, rlen );
 		}
 
 		if ( ( *( fds + 2 ) ).revents & POLLIN ){
 			rlen = read( ( *( fds + 2 ) ).fd, buf, BUFLEN );
 			if ( rlen <= 0 ) break;
-			write( ( *( fds + 0 ) ).fd, buf, rlen );
-			continue;
+			write( ( *( fds + 1 ) ).fd, buf, rlen );
 		}
 	}
 
+	close( daemon_fd );
+
+	free( session_id );
+
 	free( buf );
+
+ONERR:
 
 	close( master );
 	status = alloca( sizeof( *status ) );
