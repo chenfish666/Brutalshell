@@ -12,7 +12,12 @@
 #include <sys/poll.h>
 #include <fcntl.h>
 
-#ifdef __linux__
+#ifdef __GNUC__
+#	define alloca( size ) __builtin_alloca( size )
+#elif defined( __linux__ ) || defined( __sun )
+#include <alloca.h>
+#elif defined( __FreeBSD__ ) || defined( __NetBSD__ ) || defined( __OpenBSD__ ) || defined( __APPLE__ )
+#else
 #include <alloca.h>
 #endif
 
