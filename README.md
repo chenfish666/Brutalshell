@@ -10,3 +10,51 @@ It also supports lagacy AI intergration like command prediction, natural languag
 - [ ] Command prediction and auto-completion
 - [ ] Integration with popular LLMs
 - [ ] Cross-platform/shell support (Unix-like shells)
+
+## Development
+
+To set up the development environment, follow these steps:
+
+1. Install uv
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+2. Clone the repository
+
+```bash
+git clone https://github.com/AMD-AI-Agent-Online-Hackthon/Brutalshell.git
+cd Brutalshell
+```
+
+3. Install dependencies
+
+```bash
+uv sync
+```
+
+4. Build the wrapper
+
+```bash
+cd wrapper
+cmake -B build
+cmake --build build
+cd ..
+```
+
+### Run
+
+To execute wrapper + daemon, it's recommended to use tmux.
+
+On first tmux pane, run the daemon:
+
+```bash
+uv run src/main.py
+```
+
+On second tmux pane, run the wrapper:
+
+```bash
+./wrapper/build/bsh
+```
