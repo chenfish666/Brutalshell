@@ -53,7 +53,7 @@ on first tmux pane, run the daemon:
 uv run src/main.py
 ```
 
-on second tmux pane, run the wrapper:
+On second tmux pane, run the wrapper:
 
 ```bash
 ./wrapper/build/brutalshell_wrapper
