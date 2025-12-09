@@ -72,7 +72,8 @@ def handle_helper(conn, data: bytes, host: str):
     context = content_filter(buffer)
     prompt = f"Context: {context}\nUser input: {user_msg}"
     suffix = vllm.completions(prompt, host)
-    wrapper_connection.send(suffix.encode())
+    if(suffix):
+        wrapper_connection.send(suffix.encode())
     conn.close()
 
 '''
