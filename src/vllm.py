@@ -40,14 +40,8 @@ def completions(prompt: str, host: str):
 
     try:
         resp = requests.post(url, json=body, headers={"Content-Type": "application/json"}, timeout=120.0, verify=False)
+        suffix = re.findall(r'\[\[(.*?)\]\]', resp.json()['choices'][0]['message']["content"])[-1]
+        return suffix
     except requests.RequestException as e:
         print("Request error:", e)
         return
-
-    # print(f"Upstream URL: {url}  Status: {resp.status_code}")
-    try:
-        suffix = re.findall(r'\[\[(.*?)\]\]', resp.json()['choices'][0]['message']["content"])[-1]
-        return suffix
-        # return resp.json()['choices'][0]['message']["content"]
-    except Exception as e:
-        print(f"Something went wrong! {e}")
