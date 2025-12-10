@@ -74,7 +74,7 @@ install(TARGETS ${TARGET_NAME} ${TARGET_LIBS}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )
 
-if (ENABLE_TESTS)
+if (ENABLE_TEST)
 	include(CTest)
 	enable_testing()
 
