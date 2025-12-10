@@ -3,7 +3,7 @@
 
 int test_cleanup_resources(void);
 
-int main() {
+int main(void) {
     int failed = 0;
 
     printf("Running: test_cleanup_resources...\n");
