@@ -15,7 +15,7 @@ It also supports lagacy AI intergration like command prediction, natural languag
 
 To set up the development environment, follow these steps:
 
-1. Install uv
+1. Install uv (If you don't have it already)
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
