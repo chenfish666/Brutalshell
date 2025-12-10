@@ -61,6 +61,8 @@ Send prompt to vllm, and send the response to wrapper
 def handle_helper(conn, data: bytes, host: str):
     wrapper_session_id, user_msg = data.decode(encoding='utf-8').split('\x1f') # WRAPPER_SESSION_ID + \x1f + USER_MSG
     
+    print("received data:", user_msg)
+    
     with session_lock:
         if(wrapper_session_id in wrapper_sessions):
             buffer = wrapper_sessions[wrapper_session_id]["buffer"]
@@ -69,8 +71,9 @@ def handle_helper(conn, data: bytes, host: str):
             print(f"Wrapper {wrapper_session_id} not found / disconnected.")
             return
         
-    context = content_filter(buffer)
-    prompt = f"Context: {context}\nUser input: {user_msg}"
+    # context = content_filter(buffer)
+    # prompt = f"Context: {context}\nUser input: {user_msg}"
+    prompt = user_msg
     suffix = vllm.completions(prompt, host)
     if(suffix):
         wrapper_connection.send(suffix.encode())
