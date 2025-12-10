@@ -7,7 +7,7 @@ option(ENABLE_DEBUG "compile for debug" OFF)
 option(BUILD_STATIC "build static lib" OFF)
 option(BUILD_SHARED "build shared lib" OFF)
 option(STATIC_FIRST "static lib has higher priority" ON)
-option(ENABLE_TESTS "build tests" ON)
+option(ENABLE_TEST "build tests" ON)
 
 #set(CMAKE_INSTALL_PREFIX "/opt/tsl" CACHE STRING "Default installation directory")
 
