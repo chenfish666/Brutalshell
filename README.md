@@ -11,7 +11,7 @@ It also supports lagacy AI intergration like command prediction, natural languag
 - [ ] Integration with popular LLMs
 - [ ] Cross-platform/shell support (Unix-like shells)
 
-## Development
+## Build
 
 To set up the development environment, follow these steps:
 
@@ -80,4 +80,35 @@ If not, you can run:
 
 ```bash
 ./helper/build/helper list files in current directory
+```
+
+## Development
+
+This project has 3 main components:
+
+1. **Wrapper**: The command-line interface that users interact with.
+2. **Helper**: A utility that processes natural language commands and translates them into shell commands.
+3. **Daemon**: A background service that manages communication between the wrapper and helper, and handles LLM interactions.
+
+Before you pushing any changes, make sure to test your code thoroughly.
+
+```bash
+# Daemon tests
+uv run pytest
+
+# Wrapper tests
+cd wrapper
+rm -rf build
+cmake -B build
+cmake --build build
+ctest --test-dir build
+cd ..
+
+# Helper tests
+cd helper
+rm -rf build
+cmake -B build
+cmake --build build
+ctest --test-dir build
+cd ..
 ```
