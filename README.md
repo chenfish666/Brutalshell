@@ -6,7 +6,7 @@ It also supports lagacy AI intergration like command prediction, natural languag
 
 ## Features
 
-- [ ] Natural language command execution
+- [x] Natural language command execution
 - [ ] Command prediction and auto-completion
 - [ ] Integration with popular LLMs
 - [ ] Cross-platform/shell support (Unix-like shells)
